@@ -1,0 +1,38 @@
+<navi-bar></navi-bar>
+<br />
+<div class="container">
+  <mat-card>
+    <div class="example-container">
+      <div class="example-header">
+          <h3>Log In</h3>
+      </div>
+      <!-- Username -->
+      <mat-form-field>
+        <input matInput placeholder="Email" id="email" [(ngModel)]="email" name="email" required #em="ngModel">
+      </mat-form-field>
+      <div [hidden]="em.valid || em.pristine" class="alert alert-danger">
+          Email is required
+      </div>
+      <br />
+      <!-- Password -->
+      <mat-form-field>
+          <input  matInput placeholder="Password" type="password" id="password1" [(ngModel)]="password1" name="password1" required #pwd1="ngModel">
+      </mat-form-field>
+      <div [hidden]="pwd1.valid || pwd1.pristine" class="alert alert-danger">
+          Password required
+      </div>
+      <br />
+      <!-- Buttons -->
+      <div class="button-row">
+          <button mat-raised-button color="primary" (click)="login()" >Login</button>
+          <button mat-raised-button color="accent" (click)="signup()" >Sign Up</button>
+      </div>
+      <br />
+      <!-- Return Link -->
+      <div class="button-row">
+        <a mat-button routerLink="." (click)="cancel()">Back to the Main Site</a>
+      </div>
+    </div>
+  </mat-card>
+</div>
+
