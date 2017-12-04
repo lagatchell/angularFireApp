@@ -27,13 +27,14 @@ export class MovieService {
             .then((snapshot)=> {
                 let tmp = snapshot.val();
                 let transform = Object.keys(tmp).map(key => tmp[key]);
-                let title = transform[5];
-                let desc = transform[4];
+                let title = transform[6];
+                let rating = transform[4];
+                let desc = transform[5];
                 let duration = transform[0];
                 let imgTitle = transform[2];
                 let img = transform[3];
                 let id = transform[1];
-                let rentedMovie = new Movie (title, desc, duration, imgTitle, img, id);
+                let rentedMovie = new Movie (title, desc, duration, rating, imgTitle, img, id);
                 return rentedMovie;         
             }));
     }
@@ -49,6 +50,7 @@ export class MovieService {
                 newMovie.set ({
                     title: movie.title,
                     duration: movie.duration,
+                    rating: movie.rating,
                     shortDescription: movie.shortDescription,
                     imgTitle: movie.imgTitle,
                     imgURL: url,
@@ -67,7 +69,8 @@ export class MovieService {
             .update({
                 title: update.title,
                 shortDescription: update.shortDescription,
-                duration: update.duration
+                duration: update.duration,
+                rating: update.rating
             });
         this.openSnackBar(update.title + ' has been updated', '');
     }

@@ -20,6 +20,7 @@ export class RentComponent {
     user: any;
     rentedMovieKey: any;
     loading: boolean = true;
+    colSize: number = 5;
 
     constructor(
         public userSVC: UserService,
@@ -35,6 +36,9 @@ export class RentComponent {
     ngOnInit(){
         this.user = this.userSVC.authUser;
         this.getRentedMovieIDs();
+        this.onResize({
+            target: window
+        });
     }
 
     getRentedMovieIDs() {
@@ -75,6 +79,7 @@ export class RentComponent {
                 title: movie.title, 
                 description: movie.shortDescription,
                 duration: movie.duration,
+                rating: movie.rating,
                 id: movie.id,
                 return: function(movieData){
 
@@ -90,5 +95,29 @@ export class RentComponent {
                 }
             }
         });
+    }
+
+    onResize(event) {
+        const elementWidth = event.target.innerWidth;
+
+        if (elementWidth < 460) {
+            this.colSize = 1;
+        }
+
+        if (elementWidth < 580 && elementWidth >= 460) {
+            this.colSize = 2;
+        }
+
+        if (elementWidth < 780 && elementWidth >= 580) {
+            this.colSize = 3;
+        }
+
+        if (elementWidth < 993 && elementWidth >= 780) {
+            this.colSize = 4;
+        }
+
+        if (elementWidth > 993) {
+            this.colSize = 5;
+        }
     }
 }

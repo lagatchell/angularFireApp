@@ -20,6 +20,7 @@ export class MovieListComponent {
     movies: Movie[];
     user: any;
     loading: boolean = true;
+    colSize: number = 5;
 
     constructor(
         public movieSVC: MovieService,
@@ -32,6 +33,9 @@ export class MovieListComponent {
     ngOnInit(){
         this.user = this.userSVC.authUser;
         this.getMovies();
+        this.onResize({
+            target: window
+        });
     }
 
     getMovies() {
@@ -50,8 +54,33 @@ export class MovieListComponent {
                 title: movie.title, 
                 description: movie.shortDescription,
                 duration: movie.duration,
+                rating: movie.rating,
                 id: movie.id
             }
         });
+    }
+
+    onResize(event) {
+        const elementWidth = event.target.innerWidth;
+
+        if (elementWidth < 460) {
+            this.colSize = 1;
+        }
+
+        if (elementWidth < 580 && elementWidth >= 460) {
+            this.colSize = 2;
+        }
+
+        if (elementWidth < 780 && elementWidth >= 580) {
+            this.colSize = 3;
+        }
+
+        if (elementWidth < 993 && elementWidth >= 780) {
+            this.colSize = 4;
+        }
+
+        if (elementWidth > 993) {
+            this.colSize = 5;
+        }
     }
 }

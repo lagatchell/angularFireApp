@@ -37,6 +37,19 @@
                         </p>
                     </div>
                     <br />
+                    <!-- Movie Rating -->
+                    <mat-form-field>
+                            <input type="number" min="1" max="5" matInput placeholder="Rating" id="movieRating" [(ngModel)]="movieRating" name="movieRating" required #rat="ngModel">    
+                        </mat-form-field>
+                        <div [hidden]="rat.valid || rat.pristine" class="alert alert-danger">
+                            <p *ngIf="!rat.valid">
+                                Rating must be a number
+                            </p>
+                            <p *ngIf="!rat.pristine">
+                                Rating is required
+                            </p>
+                        </div>
+                        <br />
                     <!-- Movie Image Upload -->
                     <div class="img-container"> 
                         <div class="upload-container" >

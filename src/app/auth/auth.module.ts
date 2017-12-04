@@ -33,6 +33,8 @@ import { WishListComponent } from './wishlist/wishlist.component';
 import { ProfileComponent } from './profile/profile.component';
 import { CreateMovieComponent } from './createMovie/create-movie.component';
 
+import { StarComponent } from '../shared/rating/star.component';
+
 // App Dialogs
 import { MovieInfoDialog } from './dialogs/movie-info.dialog';
 import { RentInfoDialog } from './dialogs/rent-info.dialog';
@@ -80,6 +82,7 @@ const AuthRoutes: Routes = [
         RentComponent,
         HistoryComponent,
         WishListComponent,
+        StarComponent,
         MovieInfoDialog,
         RentInfoDialog,
         WishlistEditDialog

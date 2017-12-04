@@ -22,7 +22,7 @@
                 <ul class="dropdown-menu">
                     <li *ngIf="currentUser"><a [routerLink]="['/auth/create']">Add Movie</a></li>
                     <li><a [routerLink]="['/auth/profile']">Profile</a></li>
-                    <li><a *ngIf="currentUser" (click)="logout()" >Logout</a></li>
+                    <li><a style="cursor: pointer;" *ngIf="currentUser" (click)="logout()" >Logout</a></li>
                 </ul>
             </li>
         </ul>

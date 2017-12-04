@@ -12,11 +12,14 @@ import { WishListService } from '../services/wishlist.service';
         <div mat-dialog-content>
             <label>Duration: {{data.duration}} minutes</label>
             <br />
+            <label>Rating: <ai-star [rating]="data.rating"></ai-star></label>
+            <br />
             <label>Description:</label>
             <br />
             <p>
                 {{data.description}}
             </p>
+
         </div>
         <div mat-dialog-actions>
             <button mat-raised-button (click)="onNoClick()" tabindex="-1">Close</button>

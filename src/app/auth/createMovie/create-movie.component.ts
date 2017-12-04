@@ -13,6 +13,7 @@ export class CreateMovieComponent {
     movieTitle: string;
     movieDescription: string;
     movieDuration: string;
+    movieRating: number = 1;
     movieImgTitle: string;
     movieImg: any;
     invalidUpload: boolean;
@@ -49,6 +50,7 @@ export class CreateMovieComponent {
             this.movieTitle, 
             this.movieDescription, 
             this.movieDuration, 
+            this.movieRating,
             this.movieTitle, 
             this.movieImg
         );
@@ -59,6 +61,7 @@ export class CreateMovieComponent {
             this.movieTitle = null;
             this.movieDescription = null;
             this.movieDuration = null;
+            this.movieRating = null;
             this.movieTitle = null;
             this.movieImg = null;
             this.isReset = true;
