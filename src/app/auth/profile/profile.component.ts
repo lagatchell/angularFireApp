@@ -3,7 +3,7 @@ import { UserService } from '../services/user.service';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { Sort } from '@angular/material';
 
-import { User } from '../classes/user';
+import { User } from '../models/user';
 
 @Component({
     templateUrl: './profile.component.html', 

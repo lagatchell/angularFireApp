@@ -7,7 +7,7 @@ import { UserService } from './user.service';
 import { MovieService } from './movie.service';
 import { Observable } from 'rxjs';
 
-import { Movie } from '../classes/movie';
+import { Movie } from '../models/movie';
 import { SnackBarComponent } from '../../shared/snackbar.component';
 
 @Injectable()

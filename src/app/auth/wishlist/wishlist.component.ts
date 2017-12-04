@@ -12,7 +12,7 @@ import { WishlistEditDialog } from '../dialogs/wishlist-edit.dialog';
 import { UserService } from '../services/user.service';
 import { WishListService } from '../services/wishlist.service';
 import { MovieService } from '../services/movie.service';
-import { Movie } from '../classes/movie';
+import { Movie } from '../models/movie';
 import { Observable } from 'rxjs';
 
 @Component({

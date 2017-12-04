@@ -6,7 +6,7 @@ import { MovieInfoDialog } from '../dialogs/movie-info.dialog';
 
 import { MovieService } from '../services/movie.service';
 import { UserService } from '../services/user.service';
-import { Movie } from '../classes/movie';
+import { Movie } from '../models/movie';
 
 import { Observable } from 'rxjs';
 

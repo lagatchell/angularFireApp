@@ -10,8 +10,7 @@ import { Observable } from 'rxjs/Observable';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 
-import { User } from '../classes/user';
-
+import { User } from '../models/user';
 import { SnackBarComponent } from '../../shared/snackbar.component';
 
 @Injectable()

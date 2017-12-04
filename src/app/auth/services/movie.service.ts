@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from 'angularfire2/database';
 import * as firebase from 'firebase';
 
-import { Movie } from '../classes/movie';
+import { Movie } from '../models/movie';
 import { Observable } from 'rxjs';
 
 import { SnackBarComponent } from '../../shared/snackbar.component';
@@ -15,11 +15,10 @@ export class MovieService {
     constructor(
         public snackBar: SnackBarComponent,
         private readonly afd: AngularFireDatabase
-    ){
-        this.movies = afd.list<Movie>('movies').valueChanges();
-    }
+    ){}
 
     getMovies$() {
+        this.movies = this.afd.list<Movie>('movies').valueChanges();
         return this.movies;
     }
 

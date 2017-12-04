@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 import { AngularFireDatabase } from 'angularfire2/database';
 
-import { RentedMovie } from '../classes/rentedMovie';
+import { RentedMovie } from '../models/rentedMovie';
 import { UserService } from './user.service';
 import { MovieService } from './movie.service';
-import { Movie } from '../classes/movie';
+import { Movie } from '../models/movie';
 import { Observable } from 'rxjs';
 
 import { SnackBarComponent } from '../../shared/snackbar.component';

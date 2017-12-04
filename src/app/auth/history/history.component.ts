@@ -5,8 +5,8 @@ import { Sort } from '@angular/material';
 import { UserService } from '../services/user.service';
 import { HistoryService } from '../services/history.service';
 import { MovieService } from '../services/movie.service';
-import { Movie } from '../classes/movie';
-import { RentedMovie } from '../classes/rentedMovie';
+import { Movie } from '../models/movie';
+import { RentedMovie } from '../models/rentedMovie';
 import { Observable } from 'rxjs';
 
 @Component({

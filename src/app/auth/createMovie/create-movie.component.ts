@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { MovieService } from '../services/movie.service';
-import { Movie } from '../classes/movie';
+import { Movie } from '../models/movie';
 
 @Component({
     templateUrl: './create-movie.component.html', 

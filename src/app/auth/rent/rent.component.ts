@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material';
 
 import { RentInfoDialog } from '../dialogs/rent-info.dialog';
 
-import { Movie } from '../classes/movie';
+import { Movie } from '../models/movie';
 import { MovieService } from '../services/movie.service';
 import { UserService } from '../services/user.service';
 import { RentService } from '../services/rent.service';
