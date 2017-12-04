@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 import { AngularFireDatabase } from 'angularfire2/database';
-import {MatSnackBar} from '@angular/material';
 
 import { RentedMovie } from '../classes/rentedMovie';
 import { UserService } from './user.service';
@@ -9,19 +8,19 @@ import { MovieService } from './movie.service';
 import { Movie } from '../classes/movie';
 import { Observable } from 'rxjs';
 
+import { SnackBarComponent } from '../../shared/snackbar.component';
+
 @Injectable()
 export class HistoryService {
 
     moviesIDs: Observable<any[]>;
 
     constructor(
-        public snackBar: MatSnackBar,
         public movieSVC: MovieService,
         public userSVC: UserService,
+        public snackBar: SnackBarComponent,
         private readonly afd: AngularFireDatabase
-    ) {
-        
-    }
+    ) {}
 
     getHistoryMovieIDs$() {
         this.moviesIDs = this.afd.list('history/' + this.userSVC.authUser.uid).valueChanges();
@@ -42,7 +41,7 @@ export class HistoryService {
             id: rentedMovieID
         });
 
-        self.openSnackBar(movie.title + ' been added to your history','');
+        self.snackBar.open(movie.title + ' been added to your history');
     }
 
     updateMovieHistory(userID, rentedMovieID) {
@@ -57,12 +56,6 @@ export class HistoryService {
 
         self.openSnackBar('Movie has been removed from history','');
     } */
-
-    openSnackBar(message: string, action: string) {
-        this.snackBar.open(message, action, {
-            duration: 2000,
-        });
-    }
 
     getCurrentDate(): string
     {

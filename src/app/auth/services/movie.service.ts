@@ -3,8 +3,9 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import * as firebase from 'firebase';
 
 import { Movie } from '../classes/movie';
-import {MatSnackBar} from '@angular/material';
 import { Observable } from 'rxjs';
+
+import { SnackBarComponent } from '../../shared/snackbar.component';
 
 @Injectable()
 export class MovieService {
@@ -12,7 +13,7 @@ export class MovieService {
     movies: Observable<Movie[]>;
 
     constructor(
-        public snackBar: MatSnackBar,
+        public snackBar: SnackBarComponent,
         private readonly afd: AngularFireDatabase
     ){
         this.movies = afd.list<Movie>('movies').valueChanges();
@@ -57,10 +58,10 @@ export class MovieService {
                     id: newMovie.key
                 });
 
-                self.openSnackBar(movie.title + ' has been created','');
+                self.snackBar.open(movie.title + ' has been created');
             })
             .catch ((error)=>{
-                this.openSnackBar(error.message, '');
+                this.snackBar.open(error.message);
             });
     }
 
@@ -72,7 +73,7 @@ export class MovieService {
                 duration: update.duration,
                 rating: update.rating
             });
-        this.openSnackBar(update.title + ' has been updated', '');
+        this.snackBar.open(update.title + ' has been updated');
     }
 
     removeMovie(deleteMovie: Movie){
@@ -87,12 +88,6 @@ export class MovieService {
                     alert(`Error - Unable to delete ${deleteMovie.imgTitle}`);
                 });
 
-        self.openSnackBar(movieTitle + ' has been deleted','');
-    }
-
-    openSnackBar(message: string, action: string) {
-        this.snackBar.open(message, action, {
-            duration: 2000,
-        });
+        self.snackBar.open(movieTitle + ' has been deleted');
     }
 }

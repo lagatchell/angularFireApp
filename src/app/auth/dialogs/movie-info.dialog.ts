@@ -24,7 +24,7 @@ import { WishListService } from '../services/wishlist.service';
         <div mat-dialog-actions>
             <button mat-raised-button (click)="onNoClick()" tabindex="-1">Close</button>
             <button mat-raised-button color="primary" (click)="rent(data)" tabindex="-1" >Rent</button>
-            <button mat-raised-button color="accent" (click)="addToFavorites(data);" tabindex="-1">Add to Wishlist</button>
+            <button *ngIf="user" mat-raised-button color="accent" (click)="addToFavorites(data);" tabindex="-1">Add to Wishlist</button>
         </div>
     `,
   })

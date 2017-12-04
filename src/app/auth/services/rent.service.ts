@@ -2,13 +2,13 @@ import { Injectable, OnInit } from '@angular/core';
 import { AngularFireDatabase } from 'angularfire2/database';
 import * as firebase from 'firebase';
 
-import {MatSnackBar} from '@angular/material';
 import { HistoryService } from './history.service';
 import { UserService } from './user.service';
 import { MovieService } from './movie.service';
 import { Observable } from 'rxjs';
 
 import { Movie } from '../classes/movie';
+import { SnackBarComponent } from '../../shared/snackbar.component';
 
 @Injectable()
 export class RentService {
@@ -16,15 +16,12 @@ export class RentService {
     moviesIDs: Observable<any[]>;
 
     constructor(
-        public snackBar: MatSnackBar,
+        public snackBar: SnackBarComponent,
         public historySVC: HistoryService,
         public userSVC: UserService,
         public movieSVC: MovieService,
         private readonly afd: AngularFireDatabase
-    ){
-        
-    }
-
+    ){}
 
     getRentedMovieIDs$() {
         this.moviesIDs = this.afd.list('rented/' + this.userSVC.authUser.uid).valueChanges();
@@ -54,7 +51,7 @@ export class RentService {
 
         firebase.database().ref().update(newRecord);
 
-        self.openSnackBar(movie.title + ' has been added to your rentals','');
+        self.snackBar.open(movie.title + ' has been added to your rentals');
     }
 
     returnMovie(userID, rentedKey, movie) {
@@ -69,13 +66,7 @@ export class RentService {
             returnDate: self.getCurrentDate()
         });
 
-        self.openSnackBar(movie.title + ' has been returned','');
-    }
-
-    openSnackBar(message: string, action: string) {
-        this.snackBar.open(message, action, {
-            duration: 2000,
-        });
+        self.snackBar.open(movie.title + ' has been returned');
     }
 
     getCurrentDate(): string

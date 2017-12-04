@@ -5,13 +5,14 @@ import {
     ActivatedRouteSnapshot,
     RouterStateSnapshot
 } from '@angular/router';
-import {MatSnackBar} from '@angular/material';
 
 import { Observable } from 'rxjs/Observable';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 
 import { User } from '../classes/user';
+
+import { SnackBarComponent } from '../../shared/snackbar.component';
 
 @Injectable()
 export class UserService implements CanActivate {
@@ -21,7 +22,7 @@ export class UserService implements CanActivate {
 
     constructor( 
         private router: Router, 
-        private snackBar: MatSnackBar, 
+        private snackBar: SnackBarComponent, 
         public afAuth: AngularFireAuth 
     ) { }
 
@@ -62,7 +63,7 @@ export class UserService implements CanActivate {
         const self = this;
         this.afAuth.auth.signInWithEmailAndPassword(loginEmail, loginPassword)
         .catch(function(error){
-            self.openSnackBar('Unable to login. Try again!', '');
+            self.snackBar.open('Unable to login. Try again!');
         });
     }
 
@@ -73,9 +74,9 @@ export class UserService implements CanActivate {
         this.afAuth.auth.signOut().then(function(){
             self.authUser = {};
             self.router.navigate(['home']);
-            self.openSnackBar('Logged out', '');
+            self.snackBar.open('Logged out');
         }).catch(function(error) {
-            self.openSnackBar('Unable to logout. Try again!', '');
+            self.snackBar.open('Unable to logout. Try again!');
         });
     }
 
@@ -99,11 +100,5 @@ export class UserService implements CanActivate {
                 console.log(error.message);
             })
         }
-    }
-
-    openSnackBar(message: string, action: string) {
-        this.snackBar.open(message, action, {
-            duration: 2000,
-        });
     }
 }

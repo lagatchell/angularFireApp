@@ -34,6 +34,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { CreateMovieComponent } from './createMovie/create-movie.component';
 
 import { StarComponent } from '../shared/rating/star.component';
+import { SnackBarComponent } from '../shared/snackbar.component';
 
 // App Dialogs
 import { MovieInfoDialog } from './dialogs/movie-info.dialog';
@@ -83,6 +84,7 @@ const AuthRoutes: Routes = [
         HistoryComponent,
         WishListComponent,
         StarComponent,
+        SnackBarComponent,
         MovieInfoDialog,
         RentInfoDialog,
         WishlistEditDialog
@@ -97,7 +99,8 @@ const AuthRoutes: Routes = [
         MovieService,
         RentService,
         WishListService,
-        HistoryService
+        HistoryService,
+        SnackBarComponent
     ]
 })
 export class AuthModule {}
