@@ -8,54 +8,35 @@ import { MovieService } from './movie.service';
 import { Movie } from '../models/movie';
 import { Observable } from 'rxjs';
 
-import { SnackBarComponent } from '../../shared/snackbar.component';
-
 @Injectable()
 export class HistoryService {
-
-    moviesIDs: Observable<any[]>;
 
     constructor(
         public movieSVC: MovieService,
         public userSVC: UserService,
-        public snackBar: SnackBarComponent,
         private readonly afd: AngularFireDatabase
     ) {}
 
-    getHistoryMovieIDs$() {
-        this.moviesIDs = this.afd.list('history/' + this.userSVC.authUser.uid).valueChanges();
-        return this.moviesIDs;
-    }
+    getRentHistory$() {
+        let history: Observable<any> = this.afd.list('history/' + this.userSVC.authUser.uid).valueChanges();
+        let movies: Observable<Movie[]> = this.movieSVC.movies;
 
-    addMovie(userID, movie, rentedMovieID) {
-        const self = this;
-
-        let rentedDate = this.getCurrentDate();
-        
-        let dbRef = firebase.database().ref('history/'+ userID);
-        let rentedMovie = dbRef.push();
-        rentedMovie.set ({
-            movieId: movie.id,
-            rentedDate: rentedDate,
-            returnDate: "",
-            id: rentedMovieID
+        return Observable.combineLatest(history, movies).map(([rentHistory, movieList]) => {
+            let returnedMovies = [];
+            rentHistory.forEach(rh => {
+                movieList.forEach(m => {
+                    if (rh.movieId === m.id) {
+                        returnedMovies.push({
+                            title: m.title,
+                            rentedDate: rh.rentedDate,
+                            returnDate: rh.returnDate
+                        });
+                    }
+                });
+            });  
+            return returnedMovies;
         });
-
-        self.snackBar.open(movie.title + ' been added to your history');
     }
-
-    updateMovieHistory(userID, rentedMovieID) {
-        
-    }
-
-    // Not sure if this should be implemented
-    /* removeMovie(userID, movieID) {
-        const self = this;
-
-        let dbRef = firebase.database().ref('history/'+userID).child(movieID).remove();
-
-        self.openSnackBar('Movie has been removed from history','');
-    } */
 
     getCurrentDate(): string
     {

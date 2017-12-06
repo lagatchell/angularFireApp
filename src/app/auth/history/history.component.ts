@@ -47,7 +47,7 @@ export class HistoryComponent {
     }
 
     ngOnInit() {
-        this.getHistoryMovieIDs();
+        this.getRentHistory();
     }
 
     ngAfterViewInit() {
@@ -61,41 +61,11 @@ export class HistoryComponent {
 
     @ViewChild(MatSort) sort: MatSort;
 
-    getHistoryMovieIDs() {
-        const self = this;
-        this.historySVC.getHistoryMovieIDs$().subscribe(movieIDs => {
-            if (movieIDs.length > 0) {
-                self.movieIDs = movieIDs;
-                self.getHistoryMovies(self)
-                    .then(function(){
-                        self.dataSource = new MatTableDataSource<RentedMovie>(self.historyMovies);
-                        self.dataSource.sort = self.sort;
-                        self.dataSource.paginator = self.paginator;
-                    });
-            }
-        });
-    }
-
-    getHistoryMovies(self) {
-        self.historyMovies = [];
-        return new Promise(function(resolve, reject) {
-            for(let i=0, len=self.movieIDs.length; i<len; i++)
-            {              
-                let sub = self.movieSVC.getMovieById$(self.movieIDs[i].movieId).subscribe(historyMovie => {
-
-                    let rentedMovie: RentedMovie = {
-                        title: historyMovie.title,
-                        rentedDate: self.movieIDs[i].rentedDate,
-                        returnDate: self.movieIDs[i].returnDate
-                    };
-                    self.historyMovies.push(rentedMovie);
-                    sub.unsubscribe();
-                    if(i == (self.movieIDs.length -1))
-                    {
-                        resolve();
-                    }
-                });
-            }
+    getRentHistory() {
+        this.historySVC.getRentHistory$().subscribe(hms => {
+            this.dataSource = new MatTableDataSource<RentedMovie>(hms);
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
         });
     }
 

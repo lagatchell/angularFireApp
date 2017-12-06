@@ -5,15 +5,13 @@ import * as firebase from 'firebase';
 import { HistoryService } from './history.service';
 import { UserService } from './user.service';
 import { MovieService } from './movie.service';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/';
 
 import { Movie } from '../models/movie';
 import { SnackBarComponent } from '../../shared/snackbar.component';
 
 @Injectable()
 export class RentService {
-
-    moviesIDs: Observable<any[]>;
 
     constructor(
         public snackBar: SnackBarComponent,
@@ -23,14 +21,29 @@ export class RentService {
         private readonly afd: AngularFireDatabase
     ){}
 
-    getRentedMovieIDs$() {
-        this.moviesIDs = this.afd.list('rented/' + this.userSVC.authUser.uid).valueChanges();
-        return this.moviesIDs;
+    getRentedMovies$() {
+        let rented: Observable<any> = this.afd.list('rented/' + this.userSVC.authUser.uid).valueChanges();
+        let movies: Observable<Movie[]> = this.movieSVC.movies;
+
+        return Observable.combineLatest(rented, movies).map(([rentedMovies, movieList]) => {
+            let returnedMovies = [];
+            rentedMovies.forEach(rm => {
+                movieList.forEach(m => {
+                    if (rm.movieId === m.id) {
+                        returnedMovies.push({
+                            rentedMovie: rm,
+                            movie: m
+                        });
+                    }
+                });
+            });  
+            return returnedMovies;
+        });
     }
 
-    rentMovie(userID, movie) {
+    rentMovie(movie) {
         const self = this;
-        let uniqueId = firebase.database().ref().child('rented/'+ userID).push().key;
+        let uniqueId = firebase.database().ref().child('rented/'+ this.userSVC.authUser.uid).push().key;
 
         let rentMovieData = {
             movieId: movie.id,
@@ -39,29 +52,29 @@ export class RentService {
 
         let historyMovieData = {
             movieId: movie.id,
-            rentedDate: self.getCurrentDate(),
+            rentedDate: this.getCurrentDate(),
             returnDate: "",
             id: uniqueId
-        }
+        };
 
         let newRecord = {};
 
-        newRecord['/rented/'+ userID +'/'+ uniqueId] = rentMovieData;
-        newRecord['/history/'+ userID + '/' + uniqueId] = historyMovieData;
+        newRecord['/rented/'+ this.userSVC.authUser.uid +'/'+ uniqueId] = rentMovieData;
+        newRecord['/history/'+ this.userSVC.authUser.uid + '/' + uniqueId] = historyMovieData;
 
-        firebase.database().ref().update(newRecord);
-
-        self.snackBar.open(movie.title + ' has been added to your rentals');
+        firebase.database()
+            .ref()
+            .update(newRecord)
+            .then(function(){
+                self.snackBar.open(movie.title + ' has been added to your rentals');
+            });
     }
 
-    returnMovie(userID, rentedKey, movie) {
+    returnMovie(rentedKey, movie) {
         const self = this;
+        this.afd.list('rented/'+this.userSVC.authUser.uid+"/"+rentedKey).remove();
 
-        //let dbRef = firebase.database().ref('rented/'+userID).child(rentedKey).remove();
-
-        this.afd.list('rented/'+userID+"/"+rentedKey).remove();
-
-        let dbRef2 = firebase.database().ref('history/'+userID).child(rentedKey)
+        let dbRef2 = firebase.database().ref('history/'+this.userSVC.authUser.uid).child(rentedKey)
         .update({
             returnDate: self.getCurrentDate()
         });

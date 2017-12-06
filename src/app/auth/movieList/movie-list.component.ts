@@ -50,13 +50,7 @@ export class MovieListComponent {
         let dialogRef = this.dialog.open(MovieInfoDialog, {
             height: '400px',
             width: '600px',
-            data: { 
-                title: movie.title, 
-                description: movie.shortDescription,
-                duration: movie.duration,
-                rating: movie.rating,
-                id: movie.id
-            }
+            data: movie
         });
     }
 

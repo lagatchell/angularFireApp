@@ -37,12 +37,10 @@ import { RentService } from '../services/rent.service';
     remove(data) {
         this.wishlistSVC.removeMovie(this.user.uid, data.id, data.title);
         this.onNoClick();
-        data.remove();
     }
 
     rent(data) {
-        this.rentSVC.rentMovie(this.user.uid, 
-        {
+        this.rentSVC.rentMovie({
             title: data.title,
             id: data.movieId
         });

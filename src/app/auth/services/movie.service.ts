@@ -15,28 +15,12 @@ export class MovieService {
     constructor(
         public snackBar: SnackBarComponent,
         private readonly afd: AngularFireDatabase
-    ){}
-
-    getMovies$() {
+    ){
         this.movies = this.afd.list<Movie>('movies').valueChanges();
-        return this.movies;
     }
 
-    getMovieById$(movieID) {
-        return Observable.fromPromise(firebase.database().ref('movies/' + movieID).once('value')
-            .then((snapshot)=> {
-                let tmp = snapshot.val();
-                let transform = Object.keys(tmp).map(key => tmp[key]);
-                let title = transform[6];
-                let rating = transform[4];
-                let desc = transform[5];
-                let duration = transform[0];
-                let imgTitle = transform[2];
-                let img = transform[3];
-                let id = transform[1];
-                let rentedMovie = new Movie (title, desc, duration, rating, imgTitle, img, id);
-                return rentedMovie;         
-            }));
+    getMovies$() {
+        return this.movies;
     }
 
     createMovie(movie: Movie) {
@@ -78,7 +62,7 @@ export class MovieService {
     removeMovie(deleteMovie: Movie){
         const self = this;
         let movieTitle = deleteMovie.title;
-        let dbRef = firebase.database().ref('blogPosts/').child(deleteMovie.id).remove();
+        let dbRef = firebase.database().ref('movies/').child(deleteMovie.id).remove();
         let imageRef = firebase.storage().ref().child(`images/${deleteMovie.imgTitle}`)
             .delete()
                 .then(function() {

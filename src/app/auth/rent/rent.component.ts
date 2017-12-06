@@ -15,7 +15,6 @@ import { Observable } from 'rxjs';
 })
 
 export class RentComponent {
-    movieIDs: any[];
     movies: Movie[];
     user: any;
     rentedMovieKey: any;
@@ -29,45 +28,26 @@ export class RentComponent {
         public dialog: MatDialog
     ){
         this.movies = [];
-        this.movieIDs = [];
         this.rentedMovieKey = {};
     }
 
     ngOnInit(){
         this.user = this.userSVC.authUser;
-        this.getRentedMovieIDs();
+        this.getRentedMovies();
         this.onResize({
             target: window
         });
     }
 
-    getRentedMovieIDs() {
-        const self = this;
-        let sub = this.rentSVC.getRentedMovieIDs$().subscribe(movieIDs => {
-            if (movieIDs.length > 0) {
-                self.movieIDs = movieIDs;
-                self.getRentedMovies(self);
+    getRentedMovies() {
+        this.rentSVC.getRentedMovies$().subscribe(rms => {
+            this.movies = [];
+            for (let i = 0; i < rms.length; i++) {
+                this.movies.push(rms[i].movie);
+                this.rentedMovieKey[rms[i].movie.id] = rms[i].rentedMovie.id;
             }
-            else {
-                self.loading = false;
-                self.movies = [];
-                self.rentedMovieKey = {};
-            }
-            //sub.unsubscribe();
+            this.loading = false;
         });
-    }
-
-    getRentedMovies(self) {
-        self.movies = [];
-        for(let i=0, len=self.movieIDs.length; i<len; i++)
-        {
-            let sub = self.movieSVC.getMovieById$(self.movieIDs[i].movieId).subscribe(rentedMovie => {
-                self.movies.push(rentedMovie);
-                self.rentedMovieKey[rentedMovie.id] = self.movieIDs[i].id;
-                self.loading = false;
-                sub.unsubscribe();
-            });
-        }
     }
 
     info(movie: Movie): void {
@@ -76,22 +56,10 @@ export class RentComponent {
             height: '400px',
             width: '600px',
             data: { 
-                title: movie.title, 
-                description: movie.shortDescription,
-                duration: movie.duration,
-                rating: movie.rating,
-                id: movie.id,
-                return: function(movieData){
-
-                    let returnMovie = {
-                        title: movieData.title,
-                        shortDescription: movieData.shortDescription,
-                        duration: movieData.duration,
-                        id: movieData.id
-                    };
-
+                movie: movie,
+                returnMovie: function(){
                     let rentedKey = self.rentedMovieKey[movie.id];
-                    self.rentSVC.returnMovie(self.user.uid, rentedKey, returnMovie);
+                    self.rentSVC.returnMovie(rentedKey, movie);
                 }
             }
         });

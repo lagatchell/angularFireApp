@@ -5,21 +5,39 @@ import { Observable } from 'rxjs';
 import { SnackBarComponent } from '../../shared/snackbar.component';
 
 import { UserService } from './user.service';
+import { MovieService } from './movie.service';
+
+import { Movie } from '../models/movie';
 
 @Injectable()
 export class WishListService {
 
-    moviesIDs: Observable<any[]>;
-
     constructor(
         public snackBar: SnackBarComponent,
         public userSVC: UserService,
+        public movieSVC: MovieService,
         private readonly afd: AngularFireDatabase
     ){}
 
-    getWishlistMovieIDs$() {
-        this.moviesIDs = this.afd.list('wishlist/' + this.userSVC.authUser.uid).valueChanges();
-        return this.moviesIDs;
+    getWishlist$() {
+        let wishlist: Observable<any> = this.afd.list('wishlist/' + this.userSVC.authUser.uid).valueChanges();
+        let movies: Observable<Movie[]> = this.movieSVC.movies;
+
+        return Observable.combineLatest(wishlist, movies).map(([wishList, movieList]) => {
+            let returnedMovies = [];
+            wishList.forEach(wl => {
+                movieList.forEach(m => {
+                    if (wl.movieId === m.id) {
+                        returnedMovies.push({
+                            title: m.title,
+                            movieId: m.id,
+                            id: wl.id
+                        });
+                    }
+                });
+            });  
+            return returnedMovies;
+        });
     }
 
     addMovie(userID, movie) {

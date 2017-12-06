@@ -17,7 +17,7 @@ import { WishListService } from '../services/wishlist.service';
             <label>Description:</label>
             <br />
             <p>
-                {{data.description}}
+                {{data.shortDescription}}
             </p>
 
         </div>
@@ -47,7 +47,7 @@ import { WishListService } from '../services/wishlist.service';
     rent(movie) {
         this.userSVC.verifyLogin();
         if(this.userSVC.loggedInUser) {
-            this.rentSVC.rentMovie(this.user.uid, movie);
+            this.rentSVC.rentMovie(movie);
         }
         else {
             this.onNoClick();

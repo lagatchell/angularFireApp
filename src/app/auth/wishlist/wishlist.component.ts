@@ -46,54 +46,18 @@ export class WishListComponent {
     }
 
     ngOnInit() {
-        this.getWishlistMovieIDs();
-    }
-
-    ngAfterViewInit() {
-        if(this.dataSource != undefined)
-        {
-            this.dataSource.sort = this.sort;
-        }
+        this.getWishlist();
     }
     
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
     @ViewChild(MatSort) sort: MatSort;
 
-    getWishlistMovieIDs() {
-        const self = this;
-        this.wishlistSVC.getWishlistMovieIDs$().subscribe(movieIDs => {
-            if (movieIDs.length > 0) {
-                self.movieIDs = movieIDs;
-                self.getWishlist(self)
-                    .then(function(){
-                        self.dataSource = new MatTableDataSource<any>(self.wishlistMovies);
-                        self.dataSource.sort = self.sort;
-                        self.dataSource.paginator = self.paginator;
-                    });
-            }
-        });
-    }
-
-    getWishlist(self) {
-        self.wishlistMovies = [];
-        return new Promise(function(resolve, reject) {
-            for(let i=0, len=self.movieIDs.length; i<len; i++)
-            {       
-                let sub = self.movieSVC.getMovieById$(self.movieIDs[i].movieId).subscribe(movie => {
-                    let wishlistMovie: any = {
-                        title: movie.title,
-                        movieId: movie.id,
-                        id: self.movieIDs[i].id
-                    };
-                    self.wishlistMovies.push(wishlistMovie);
-                    sub.unsubscribe();
-                    if(i == (self.movieIDs.length -1))
-                    {
-                        resolve();
-                    }
-                })
-            }
+    getWishlist() {
+        this.wishlistSVC.getWishlist$().subscribe(wms => {
+            this.dataSource = new MatTableDataSource<any>(wms);
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
         });
     }
 
@@ -102,22 +66,7 @@ export class WishListComponent {
         let dialogRef = this.dialog.open(WishlistEditDialog, {
             height: '150px',
             width: '350px',
-            data: { 
-                title: row.title,
-                movieId: row.movieId,
-                id: row.id,
-                remove: function(){
-                    for(var i=0, len=self.dataSource.data.length; i<len; i++)
-                    {
-                        if(self.dataSource.data[i].id === row.id)
-                        {
-                            self.dataSource.data.splice(i, 1);
-                            let newDataSource = self.dataSource.data;
-                            self.dataSource = new MatTableDataSource<any>(newDataSource);
-                        }
-                    }
-                }
-            }
+            data: row
         });
     }
 

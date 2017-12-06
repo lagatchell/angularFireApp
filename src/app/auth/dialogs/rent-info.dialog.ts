@@ -4,16 +4,16 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 @Component({
     selector: 'rent-info-dialog',
     template: `
-        <h1 mat-dialog-title>{{data.title}}</h1>
+        <h1 mat-dialog-title>{{data.movie.title}}</h1>
         <div mat-dialog-content>
-            <label>Duration: {{data.duration}} minutes</label>
+            <label>Duration: {{data.movie.duration}} minutes</label>
             <br />
-            <label>Rating: <ai-star [rating]="data.rating"></ai-star></label>
+            <label>Rating: <ai-star [rating]="data.movie.rating"></ai-star></label>
             <br />
             <label>Description:</label>
             <br />
             <p>
-                {{data.description}}
+                {{data.movie.shortDescription}}
             </p>
         </div>
         <div mat-dialog-actions>
@@ -27,16 +27,14 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
     constructor(
         public dialogRef: MatDialogRef<RentInfoDialog>,
         @Inject(MAT_DIALOG_DATA) public data: any
-    ) { 
-
-    }
+    ) {}
 
     onNoClick(): void {
         this.dialogRef.close();
     }
     
-    return(movie) {
-        movie.return(movie);
+    return(data) {
+        data.returnMovie();
         this.onNoClick();
     }
 

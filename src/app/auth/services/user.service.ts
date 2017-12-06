@@ -31,7 +31,8 @@ export class UserService implements CanActivate {
     }
 
     verifyLogin(): boolean {
-        if (this.userLoggedIn) { return true; }
+
+        if (this.afAuth.auth.currentUser !== null) { return true; }
 
         this.router.navigate(['/auth/login']);
         return false;
@@ -71,7 +72,7 @@ export class UserService implements CanActivate {
         this.userLoggedIn = false;
         this.loggedInUser = '';
         this.afAuth.auth.signOut().then(function(){
-            self.authUser = {};
+            self.authUser = null;
             self.router.navigate(['home']);
             self.snackBar.open('Logged out');
         }).catch(function(error) {
@@ -80,9 +81,9 @@ export class UserService implements CanActivate {
     }
 
     updateUser(user: User, newPassword) {
+        const self = this;
         let storageRef = firebase.storage().ref();
         storageRef.child(`images/users/${user.id}`).putString(user.photoURL, 'data_url');
-    
         let path = storageRef.child(`images/users/${user.id}`).fullPath;
 
         storageRef.child(path).getDownloadURL().then(function(url){
@@ -90,14 +91,21 @@ export class UserService implements CanActivate {
                 displayName: user.displayName,
                 photoURL: url
              });
+        })
+        .then(function(){
+            if(typeof(newPassword) != 'undefined' && newPassword != null && newPassword != "")
+            {
+                this.afAuth.auth.currentUser.updatePassword(newPassword)
+                .catch(function(error){
+                    console.log(error.message);
+                })
+            }
+        })
+        .then(function(){
+            self.snackBar.open('Update sucessful!');
+        })
+        .catch(function(error){
+            console.log(error.message);
         });
-
-        if(typeof(newPassword) != 'undefined' && newPassword != null && newPassword != "")
-        {
-            this.afAuth.auth.currentUser.updatePassword(newPassword)
-            .catch(function(error){
-                console.log(error.message);
-            })
-        }
     }
 }
