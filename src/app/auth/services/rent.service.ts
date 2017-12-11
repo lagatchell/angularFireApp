@@ -1,29 +1,36 @@
+// Angular
 import { Injectable, OnInit } from '@angular/core';
+
+// Firebase
 import { AngularFireDatabase } from 'angularfire2/database';
 import * as firebase from 'firebase';
 
-import { HistoryService } from './history.service';
+// Services
 import { UserService } from './user.service';
 import { MovieService } from './movie.service';
-import { Observable } from 'rxjs/';
 
+// Models
 import { Movie } from '../models/movie';
+
+// Injectables
 import { SnackBarComponent } from '../../shared/snackbar.component';
+
+// Other
+import { Observable } from 'rxjs/';
 
 @Injectable()
 export class RentService {
 
     constructor(
         public snackBar: SnackBarComponent,
-        public historySVC: HistoryService,
-        public userSVC: UserService,
-        public movieSVC: MovieService,
+        public userService: UserService,
+        public movieService: MovieService,
         private readonly afd: AngularFireDatabase
     ){}
 
     getRentedMovies$() {
-        let rented: Observable<any> = this.afd.list('rented/' + this.userSVC.authUser.uid).valueChanges();
-        let movies: Observable<Movie[]> = this.movieSVC.movies;
+        let rented: Observable<any> = this.afd.list('rented/' + this.userService.authUser.uid).valueChanges();
+        let movies: Observable<Movie[]> = this.movieService.movies;
 
         return Observable.combineLatest(rented, movies).map(([rentedMovies, movieList]) => {
             let returnedMovies = [];
@@ -36,14 +43,14 @@ export class RentService {
                         });
                     }
                 });
-            });  
+            });
             return returnedMovies;
         });
     }
 
     rentMovie(movie) {
         const self = this;
-        let uniqueId = firebase.database().ref().child('rented/'+ this.userSVC.authUser.uid).push().key;
+        let uniqueId = this.afd.database.ref().child('rented/'+ this.userService.authUser.uid).push().key;
 
         let rentMovieData = {
             movieId: movie.id,
@@ -59,10 +66,10 @@ export class RentService {
 
         let newRecord = {};
 
-        newRecord['/rented/'+ this.userSVC.authUser.uid +'/'+ uniqueId] = rentMovieData;
-        newRecord['/history/'+ this.userSVC.authUser.uid + '/' + uniqueId] = historyMovieData;
+        newRecord['/rented/'+ this.userService.authUser.uid +'/'+ uniqueId] = rentMovieData;
+        newRecord['/history/'+ this.userService.authUser.uid + '/' + uniqueId] = historyMovieData;
 
-        firebase.database()
+        this.afd.database
             .ref()
             .update(newRecord)
             .then(function(){
@@ -70,11 +77,11 @@ export class RentService {
             });
     }
 
-    returnMovie(rentedKey, movie) {
+    returnMovie(rentedKey: string, movie: Movie) {
         const self = this;
-        this.afd.list('rented/'+this.userSVC.authUser.uid+"/"+rentedKey).remove();
+        this.afd.list('rented/'+this.userService.authUser.uid+"/"+rentedKey).remove();
 
-        let dbRef2 = firebase.database().ref('history/'+this.userSVC.authUser.uid).child(rentedKey)
+        let dbRef2 = this.afd.database.ref('history/'+this.userService.authUser.uid).child(rentedKey)
         .update({
             returnDate: self.getCurrentDate()
         });
@@ -86,7 +93,7 @@ export class RentService {
     {
         let today = new Date();
         let dd = (today.getDate()).toString();
-        let mm = (today.getMonth()+1).toString(); //January is 0!
+        let mm = (today.getMonth()+1).toString();
         let yyyy = today.getFullYear();
         
         if(parseInt(dd,10)<10) {

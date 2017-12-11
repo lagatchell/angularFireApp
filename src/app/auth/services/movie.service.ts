@@ -1,11 +1,18 @@
+// Angular
 import { Injectable } from '@angular/core';
+
+// Firebase
 import { AngularFireDatabase } from 'angularfire2/database';
 import * as firebase from 'firebase';
 
+//Models
 import { Movie } from '../models/movie';
-import { Observable } from 'rxjs';
 
+// Injectables
 import { SnackBarComponent } from '../../shared/snackbar.component';
+
+// Other
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class MovieService {
@@ -46,31 +53,5 @@ export class MovieService {
             .catch ((error)=>{
                 this.snackBar.open(error.message);
             });
-    }
-
-    editMovie(update: Movie) {
-        let dbRef = firebase.database().ref('movies/').child(update.id)
-            .update({
-                title: update.title,
-                shortDescription: update.shortDescription,
-                duration: update.duration,
-                rating: update.rating
-            });
-        this.snackBar.open(update.title + ' has been updated');
-    }
-
-    removeMovie(deleteMovie: Movie){
-        const self = this;
-        let movieTitle = deleteMovie.title;
-        let dbRef = firebase.database().ref('movies/').child(deleteMovie.id).remove();
-        let imageRef = firebase.storage().ref().child(`images/${deleteMovie.imgTitle}`)
-            .delete()
-                .then(function() {
-                    alert(`${deleteMovie.imgTitle} was deleted from Storage`);
-                }).catch(function(error) {
-                    alert(`Error - Unable to delete ${deleteMovie.imgTitle}`);
-                });
-
-        self.snackBar.open(movieTitle + ' has been deleted');
     }
 }

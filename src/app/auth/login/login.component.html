@@ -1,5 +1,3 @@
-<navi-bar></navi-bar>
-<br />
 <div class="container">
   <mat-card>
     <div class="example-container">
@@ -16,9 +14,9 @@
       <br />
       <!-- Password -->
       <mat-form-field>
-          <input  matInput placeholder="Password" type="password" id="password1" [(ngModel)]="password1" name="password1" required #pwd1="ngModel">
+          <input  matInput placeholder="Password" type="password" id="password" [(ngModel)]="password" name="password" required #pwd="ngModel">
       </mat-form-field>
-      <div [hidden]="pwd1.valid || pwd1.pristine" class="alert alert-danger">
+      <div [hidden]="pwd.valid || pwd.pristine" class="alert alert-danger">
           Password required
       </div>
       <br />

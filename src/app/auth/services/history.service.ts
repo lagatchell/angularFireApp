@@ -1,32 +1,42 @@
+// Angular
 import { Injectable } from '@angular/core';
+
+// Firebase
 import * as firebase from 'firebase';
 import { AngularFireDatabase } from 'angularfire2/database';
 
-import { RentedMovie } from '../models/rentedMovie';
+// Services
 import { UserService } from './user.service';
 import { MovieService } from './movie.service';
+
+// Models
+import { RentedMovie } from '../models/rented-movie';
 import { Movie } from '../models/movie';
+
+// Other
 import { Observable } from 'rxjs';
 
 @Injectable()
 export class HistoryService {
 
     constructor(
-        public movieSVC: MovieService,
-        public userSVC: UserService,
+        public movieService: MovieService,
+        public userService: UserService,
         private readonly afd: AngularFireDatabase
     ) {}
 
     getRentHistory$() {
-        let history: Observable<any> = this.afd.list('history/' + this.userSVC.authUser.uid).valueChanges();
-        let movies: Observable<Movie[]> = this.movieSVC.movies;
+        let history: Observable<RentedMovie[]> = this.afd.list('history/' + this.userService.authUser.uid).valueChanges();
+        let movies: Observable<Movie[]> = this.movieService.movies;
 
         return Observable.combineLatest(history, movies).map(([rentHistory, movieList]) => {
-            let returnedMovies = [];
+            let returnedMovies: RentedMovie[] = [];
             rentHistory.forEach(rh => {
                 movieList.forEach(m => {
                     if (rh.movieId === m.id) {
                         returnedMovies.push({
+                            id: rh.id,
+                            movieId: rh.movieId,
                             title: m.title,
                             rentedDate: rh.rentedDate,
                             returnDate: rh.returnDate
@@ -36,23 +46,5 @@ export class HistoryService {
             });  
             return returnedMovies;
         });
-    }
-
-    getCurrentDate(): string
-    {
-        let today = new Date();
-        let dd = (today.getDate()).toString();
-        let mm = (today.getMonth()+1).toString(); //January is 0!
-        let yyyy = today.getFullYear();
-        
-        if(parseInt(dd,10)<10) {
-            dd = '0'+dd;
-        }
-        
-        if(parseInt(mm, 10)<10) {
-            mm = '0'+mm;
-        } 
-        
-        return mm + '/' + dd + '/' + yyyy;
     }
 }

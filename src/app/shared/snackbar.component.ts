@@ -1,4 +1,7 @@
+// Angular
 import { Component } from '@angular/core';
+
+// Material
 import {MatSnackBar} from '@angular/material';
 
 @Component({

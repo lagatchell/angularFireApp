@@ -1,4 +1,7 @@
+// Angular
 import { Component, OnInit, ViewChild } from '@angular/core';
+
+// Material
 import { 
     MatPaginator, 
     MatTableDataSource, 
@@ -7,12 +10,17 @@ import {
     Sort 
 } from '@angular/material';
 
+// Injectables
 import { WishlistEditDialog } from '../dialogs/wishlist-edit.dialog';
 
-import { UserService } from '../services/user.service';
+// Services
 import { WishListService } from '../services/wishlist.service';
-import { MovieService } from '../services/movie.service';
+
+// Models
 import { Movie } from '../models/movie';
+import { WishlistMovie } from '../models/wishlist-movie';
+ 
+// Other
 import { Observable } from 'rxjs';
 
 @Component({
@@ -22,7 +30,6 @@ import { Observable } from 'rxjs';
 
 export class WishListComponent {
 
-    authUser: any;
     displayedColumnKeys = ['title'];
     displayedColumns = [
         {
@@ -31,19 +38,13 @@ export class WishListComponent {
         }
     ];
     dataSource: MatTableDataSource<any>;
-    movieIDs: any[];
-    wishlistMovies: any[];
+    movieIDs: string[];
+    wishlistMovies: WishlistMovie[];
 
     constructor(
-        private userSVC: UserService, 
-        public wishlistSVC: WishListService, 
+        public wishListService: WishListService,
         public dialog: MatDialog, 
-        public movieSVC: MovieService)
-    { 
-        this.authUser = this.userSVC.authUser;
-        this.wishlistMovies = new Array<any>();
-        this.movieIDs = new Array<any>();
-    }
+    ) {}
 
     ngOnInit() {
         this.getWishlist();
@@ -54,8 +55,8 @@ export class WishListComponent {
     @ViewChild(MatSort) sort: MatSort;
 
     getWishlist() {
-        this.wishlistSVC.getWishlist$().subscribe(wms => {
-            this.dataSource = new MatTableDataSource<any>(wms);
+        this.wishListService.getWishlist$().subscribe(wms => {
+            this.dataSource = new MatTableDataSource<WishlistMovie>(wms);
             this.dataSource.sort = this.sort;
             this.dataSource.paginator = this.paginator;
         });
@@ -72,8 +73,8 @@ export class WishListComponent {
 
     applyFilter(filterValue: string)
     {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        filterValue = filterValue.trim();
+        filterValue = filterValue.toLowerCase();
         this.dataSource.filter = filterValue;
     }
 }

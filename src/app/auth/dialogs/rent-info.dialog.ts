@@ -1,5 +1,11 @@
+// Angular
 import { Component, OnInit, Inject} from '@angular/core';
+
+// Material
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+
+// Services
+import { RentService } from '../services/rent.service';
 
 @Component({
     selector: 'rent-info-dialog',
@@ -26,7 +32,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
     constructor(
         public dialogRef: MatDialogRef<RentInfoDialog>,
-        @Inject(MAT_DIALOG_DATA) public data: any
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        public rentService: RentService
     ) {}
 
     onNoClick(): void {
@@ -34,7 +41,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
     }
     
     return(data) {
-        data.returnMovie();
+        this.rentService.returnMovie(data.rentedKey, data.movie);
         this.onNoClick();
     }
 

@@ -1,7 +1,9 @@
+// Angular
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 
+// Components
 import { NavComponent } from './nav.component';
 
 @NgModule({

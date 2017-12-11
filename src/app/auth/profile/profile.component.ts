@@ -1,8 +1,13 @@
+// Angular
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { UserService } from '../services/user.service';
-import { MatPaginator, MatTableDataSource } from '@angular/material';
-import { Sort } from '@angular/material';
 
+// Material
+import { MatPaginator, MatTableDataSource, Sort } from '@angular/material';
+
+// Services
+import { UserService } from '../services/user.service';
+
+// Models
 import { User } from '../models/user';
 
 @Component({
@@ -19,13 +24,12 @@ export class ProfileComponent {
     profilePic: any;
     invalidUpload: boolean;
 
-    constructor(private userSVC: UserService)
+    constructor(private userService: UserService)
     {
-        this.authUser = userSVC.authUser;
+        this.authUser = this.userService.authUser;
         this.userDisplayName = this.authUser.displayName;
         this.userEmail = this.authUser.email;
         this.profilePic = this.authUser.photoURL;
-        console.log(this.profilePic);
     }
 
     fileLoad($event: any) {
@@ -58,6 +62,6 @@ export class ProfileComponent {
             id: this.authUser.uid
         }
 
-        this.userSVC.updateUser(updatedUser, this.userPassword);
+        this.userService.updateUser(updatedUser, this.userPassword);
     }
 }

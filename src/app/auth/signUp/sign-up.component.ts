@@ -1,7 +1,9 @@
+// Angular
 import { Component } from '@angular/core';
-import {UserService} from '../services/user.service';
 import { Router } from '@angular/router';
 
+// Services
+import {UserService} from '../services/user.service';
 
 @Component({
   templateUrl: './sign-up.component.html',
@@ -14,7 +16,10 @@ export class SignUpComponent {
   password2: string;
   passwordFail: boolean = false;
 
-  constructor(private userSVC: UserService, private router: Router){}
+  constructor(
+    private userService: UserService, 
+    private router: Router
+  ){}
 
   signUp(){
     if (this.password1 !== this.password2) {
@@ -22,7 +27,7 @@ export class SignUpComponent {
     } else {
       this.passwordFail = false;
       if (this.email !== undefined && this.password1 !== undefined) {
-        this.userSVC.register(this.email, this.password1);
+        this.userService.register(this.email, this.password1);
       }
     }
   }

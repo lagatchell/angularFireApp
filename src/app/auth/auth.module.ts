@@ -1,8 +1,8 @@
 // Angular Modules
-import { NgModule }       from '@angular/core';
-import { CommonModule }   from '@angular/common';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { FormsModule }   from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 // App Modules
 import { NavModule } from '../nav/nav.module';
@@ -36,7 +36,7 @@ import { CreateMovieComponent } from './createMovie/create-movie.component';
 import { StarComponent } from '../shared/rating/star.component';
 import { SnackBarComponent } from '../shared/snackbar.component';
 
-// App Dialogs
+// App Injectables
 import { MovieInfoDialog } from './dialogs/movie-info.dialog';
 import { RentInfoDialog } from './dialogs/rent-info.dialog';
 import { WishlistEditDialog } from './dialogs/wishlist-edit.dialog';

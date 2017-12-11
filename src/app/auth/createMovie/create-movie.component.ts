@@ -1,6 +1,10 @@
+// Angular
 import { Component } from '@angular/core';
 
+// Services
 import { MovieService } from '../services/movie.service';
+
+// Models
 import { Movie } from '../models/movie';
 
 @Component({
@@ -20,7 +24,7 @@ export class CreateMovieComponent {
     isReset: boolean = false;
 
     constructor(
-        public movieSVC: MovieService
+        public movieService: MovieService
     ){}
 
     fileLoad($event: any) {
@@ -56,7 +60,7 @@ export class CreateMovieComponent {
         );
 
         try {
-            this.movieSVC.createMovie(newMovie);
+            this.movieService.createMovie(newMovie);
 
             this.movieTitle = null;
             this.movieDescription = null;

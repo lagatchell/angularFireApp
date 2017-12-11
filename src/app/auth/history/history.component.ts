@@ -1,12 +1,18 @@
+// Angular
 import { Component, OnInit, ViewChild } from '@angular/core';
+
+// Material
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { Sort } from '@angular/material';
 
-import { UserService } from '../services/user.service';
+// Services
 import { HistoryService } from '../services/history.service';
-import { MovieService } from '../services/movie.service';
+
+// Models
 import { Movie } from '../models/movie';
-import { RentedMovie } from '../models/rentedMovie';
+import { RentedMovie } from '../models/rented-movie';
+
+// Other
 import { Observable } from 'rxjs';
 
 @Component({
@@ -15,7 +21,6 @@ import { Observable } from 'rxjs';
 })
 
 export class HistoryComponent {
-    authUser: any;
     displayName: string;
     displayedColumnKeys = ['title', 'rentedDate', 'returnDate'];
     displayedColumns = [
@@ -33,28 +38,14 @@ export class HistoryComponent {
         }
     ];
     dataSource: MatTableDataSource<RentedMovie>;
-    movieIDs: any[];
     historyMovies: RentedMovie[];
 
     constructor(
-        private userSVC: UserService, 
-        public historySVC: HistoryService, 
-        public movieSVC: MovieService
-    ) {
-        this.authUser = this.userSVC.authUser;
-        this.historyMovies = new Array<RentedMovie>();
-        this.movieIDs = new Array<any>();
-    }
+        public historyService: HistoryService
+    ) {}
 
     ngOnInit() {
         this.getRentHistory();
-    }
-
-    ngAfterViewInit() {
-        if(this.dataSource != undefined)
-        {
-            this.dataSource.sort = this.sort;
-        }
     }
     
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -62,7 +53,7 @@ export class HistoryComponent {
     @ViewChild(MatSort) sort: MatSort;
 
     getRentHistory() {
-        this.historySVC.getRentHistory$().subscribe(hms => {
+        this.historyService.getRentHistory$().subscribe(hms => {
             this.dataSource = new MatTableDataSource<RentedMovie>(hms);
             this.dataSource.sort = this.sort;
             this.dataSource.paginator = this.paginator;
@@ -71,8 +62,8 @@ export class HistoryComponent {
 
     applyFilter(filterValue: string)
     {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        filterValue = filterValue.trim(); 
+        filterValue = filterValue.toLowerCase();
         this.dataSource.filter = filterValue;
     }
 }

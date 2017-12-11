@@ -1,4 +1,7 @@
+// Angular
 import { Component, OnInit } from '@angular/core';
+
+// Services
 import {UserService} from '../auth/services/user.service';
 
 @Component({
@@ -12,24 +15,25 @@ export class NavComponent implements OnInit {
     currentUser: string;
     photo: any;
 
-
-    constructor(private userSVC: UserService){
-        this.currentUser = userSVC.loggedInUser;
-    }
+    constructor(
+        private userService: UserService
+    ){}
 
     ngOnInit(){
-        this.currentUser = this.userSVC.loggedInUser;
-
-        if (this.userSVC.userLoggedIn) {
-            if(this.userSVC.authUser.photoURL !== null) {
-                this.photo = this.userSVC.authUser.photoURL;
+        this.userService.afAuth.auth.onAuthStateChanged(user => {
+            if (user !== null) {
+                this.currentUser = user.email;
+                if(user.photoURL !== null) {
+                    this.photo = user.photoURL;
+                }
+            } else {
+                this.currentUser = null;
+                this.photo = null;
             }
-        }
+        });
     }
 
-    logout()
-    {
-        this.userSVC.logout();
+    logout() {
+        this.userService.logout();
     }
-
 }

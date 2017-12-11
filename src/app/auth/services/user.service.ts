@@ -1,3 +1,4 @@
+// Angular
 import { Injectable } from '@angular/core';
 import {
     CanActivate,
@@ -6,35 +7,59 @@ import {
     RouterStateSnapshot
 } from '@angular/router';
 
-import { Observable } from 'rxjs/Observable';
+// Firebase
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 
+// Models
 import { User } from '../models/user';
+
+// Injectables
 import { SnackBarComponent } from '../../shared/snackbar.component';
+
+// Other
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class UserService implements CanActivate {
     userLoggedIn: boolean = false;
     loggedInUser: string;
     authUser: any;
+    currentURL: string;
 
     constructor( 
         private router: Router, 
         private snackBar: SnackBarComponent, 
         public afAuth: AngularFireAuth 
-    ) { }
+    ) { 
+        this.setAuthState();
+    }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        let url: string = state.url;
+        this.currentURL = state.url;
         return this.verifyLogin();
     }
 
+    setAuthState() {
+        this.afAuth.auth.onAuthStateChanged(user => {
+            if(user !== null) {
+                this.userLoggedIn = true;
+                this.loggedInUser = user.email;
+                this.authUser = user;
+                this.router.navigateByUrl(this.currentURL);
+            } 
+            else {
+                this.userLoggedIn = false;
+                this.loggedInUser = null;
+                this.authUser = null;
+                this.currentURL = "/auth/movies";
+                this.router.navigate(['/auth/login']);
+            }
+        });
+    }
+
     verifyLogin(): boolean {
-
-        if (this.afAuth.auth.currentUser !== null) { return true; }
-
-        this.router.navigate(['/auth/login']);
+        if (this.userLoggedIn) { return true; }
         return false;
     }
 
@@ -42,26 +67,19 @@ export class UserService implements CanActivate {
         let self = this;
         this.afAuth.auth.createUserWithEmailAndPassword(email, password)
             .then(function(){
-                self.verifyUser();
+                self.router.navigate(['/auth/movies']);
             })
             .catch(function(error){
                 console.log(error.message);
             });
     }
 
-    verifyUser() {
-        this.authUser = this.afAuth.auth.currentUser;
-        if(this.authUser)
-        {
-            this.loggedInUser = this.authUser.email;
-            this.userLoggedIn = true;
-            this.router.navigate(['/auth/movies']);
-        }
-    }
-
     login(loginEmail: string, loginPassword: string) {
         const self = this;
         this.afAuth.auth.signInWithEmailAndPassword(loginEmail, loginPassword)
+        .then(function(){
+            self.router.navigate(['/auth/movies']);
+        })
         .catch(function(error){
             self.snackBar.open('Unable to login. Try again!');
         });
@@ -69,11 +87,7 @@ export class UserService implements CanActivate {
 
     logout() {
         const self = this;
-        this.userLoggedIn = false;
-        this.loggedInUser = '';
         this.afAuth.auth.signOut().then(function(){
-            self.authUser = null;
-            self.router.navigate(['home']);
             self.snackBar.open('Logged out');
         }).catch(function(error) {
             self.snackBar.open('Unable to logout. Try again!');

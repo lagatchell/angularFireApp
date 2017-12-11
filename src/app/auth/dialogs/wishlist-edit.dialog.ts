@@ -1,7 +1,10 @@
+// Angular
 import { Component, OnInit, Inject } from '@angular/core';
+
+// Material
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
-import { UserService } from '../services/user.service';
+// Services
 import { WishListService } from '../services/wishlist.service';
 import { RentService } from '../services/rent.service';
 
@@ -20,29 +23,23 @@ import { RentService } from '../services/rent.service';
   })
 
   export class WishlistEditDialog {
-  user: any;
 
     constructor(
         public dialogRef: MatDialogRef<WishlistEditDialog>,
         @Inject(MAT_DIALOG_DATA) public data: any,
-        public userSVC: UserService,
-        public wishlistSVC: WishListService,
-        public rentSVC: RentService
+        public wishListService: WishListService,
+        public rentService: RentService
     ) { }
 
-    ngOnInit(){
-        this.user = this.userSVC.authUser;
-    }
-
-    remove(data) {
-        this.wishlistSVC.removeMovie(this.user.uid, data.id, data.title);
+    remove(movie) {
+        this.wishListService.removeMovie(movie);
         this.onNoClick();
     }
 
-    rent(data) {
-        this.rentSVC.rentMovie({
-            title: data.title,
-            id: data.movieId
+    rent(movie) {
+        this.rentService.rentMovie({
+            id: movie.movieId,
+            title: movie.title
         });
     }
 

@@ -1,12 +1,20 @@
+// Angular
 import { Component, OnInit, Inject} from '@angular/core';
+
+// Material
 import { MatDialog } from '@angular/material';
 
+// Injectables
 import { RentInfoDialog } from '../dialogs/rent-info.dialog';
 
-import { Movie } from '../models/movie';
-import { MovieService } from '../services/movie.service';
+// Services
 import { UserService } from '../services/user.service';
 import { RentService } from '../services/rent.service';
+
+// Models
+import { Movie } from '../models/movie';
+
+// Other
 import { Observable } from 'rxjs';
 
 @Component({
@@ -16,15 +24,12 @@ import { Observable } from 'rxjs';
 
 export class RentComponent {
     movies: Movie[];
-    user: any;
     rentedMovieKey: any;
     loading: boolean = true;
     colSize: number = 5;
 
     constructor(
-        public userSVC: UserService,
-        public rentSVC: RentService,
-        public movieSVC: MovieService,
+        public rentService: RentService,
         public dialog: MatDialog
     ){
         this.movies = [];
@@ -32,7 +37,6 @@ export class RentComponent {
     }
 
     ngOnInit(){
-        this.user = this.userSVC.authUser;
         this.getRentedMovies();
         this.onResize({
             target: window
@@ -40,8 +44,9 @@ export class RentComponent {
     }
 
     getRentedMovies() {
-        this.rentSVC.getRentedMovies$().subscribe(rms => {
+        this.rentService.getRentedMovies$().subscribe(rms => {
             this.movies = [];
+            this.rentedMovieKey = {};
             for (let i = 0; i < rms.length; i++) {
                 this.movies.push(rms[i].movie);
                 this.rentedMovieKey[rms[i].movie.id] = rms[i].rentedMovie.id;
@@ -57,10 +62,7 @@ export class RentComponent {
             width: '600px',
             data: { 
                 movie: movie,
-                returnMovie: function(){
-                    let rentedKey = self.rentedMovieKey[movie.id];
-                    self.rentSVC.returnMovie(rentedKey, movie);
-                }
+                rentedKey: self.rentedMovieKey[movie.id]
             }
         });
     }

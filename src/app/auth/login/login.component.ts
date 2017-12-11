@@ -1,6 +1,9 @@
+// Angular
 import { Component } from '@angular/core';
-import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
+
+// Services
+import { UserService } from '../services/user.service';
 
 @Component({
   templateUrl: './login.component.html',
@@ -9,14 +12,16 @@ import { Router } from '@angular/router';
  
 export class LoginComponent { 
   email: string;
-  password1: string;
+  password: string;
   
-  constructor(private userSVC: UserService, private router: Router){}
+  constructor(
+    private userService: UserService, 
+    private router: Router
+  ){}
 
   login(){
-    if (this.email !== undefined && this.password1 !== undefined) {
-      this.userSVC.login(this.email, this.password1);
-      this.userSVC.verifyUser();
+    if (this.email !== undefined && this.password !== undefined) {
+      this.userService.login(this.email, this.password);
     }
   }
 

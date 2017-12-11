@@ -1,13 +1,19 @@
+// Angular
 import { Component, OnInit } from '@angular/core';
-import * as firebase from 'firebase';
+
+// Material
 import { MatDialog } from '@angular/material';
 
+// Injectables
 import { MovieInfoDialog } from '../dialogs/movie-info.dialog';
 
+// Services
 import { MovieService } from '../services/movie.service';
-import { UserService } from '../services/user.service';
+
+// Models
 import { Movie } from '../models/movie';
 
+// Other
 import { Observable } from 'rxjs';
 
 @Component({
@@ -18,20 +24,15 @@ import { Observable } from 'rxjs';
 export class MovieListComponent {
     
     movies: Movie[];
-    user: any;
     loading: boolean = true;
     colSize: number = 5;
 
     constructor(
-        public movieSVC: MovieService,
-        public userSVC: UserService,
+        public movieService: MovieService,
         public dialog: MatDialog
-    ){
-        this.movies = new Array<Movie>();
-    }
+    ){}
 
     ngOnInit(){
-        this.user = this.userSVC.authUser;
         this.getMovies();
         this.onResize({
             target: window
@@ -39,10 +40,9 @@ export class MovieListComponent {
     }
 
     getMovies() {
-        const self = this;
-        let sub = this.movieSVC.getMovies$().subscribe(movies => {
-            self.movies = movies;
-            self.loading = false;
+        this.movieService.getMovies$().subscribe(movies => {
+            this.movies = movies;
+            this.loading = false;
         });
     }
 

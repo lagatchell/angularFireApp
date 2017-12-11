@@ -1,3 +1,4 @@
+// Angular
 import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
