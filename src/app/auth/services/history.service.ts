@@ -24,12 +24,12 @@ export class HistoryService {
     constructor(
         public movieService: MovieService,
         public userService: UserService,
-        private readonly afd: AngularFireDatabase
+        private readonly afdb: AngularFireDatabase
     ) {}
 
     getRentHistory$() {
-        let history: Observable<RentedMovie[]> = this.afd.list('history/' + this.userService.authUser.uid).valueChanges();
-        let movies: Observable<Movie[]> = this.movieService.movies;
+        let history: Observable<RentedMovie[]> = this.afdb.list('history/' + this.userService.authUser.uid).valueChanges();
+        let movies: Observable<Movie[]> = this.movieService.getMovies$();
 
         return Observable.combineLatest(history, movies).map(([rentHistory, movieList]) => {
             let returnedMovies: RentedMovie[] = [];

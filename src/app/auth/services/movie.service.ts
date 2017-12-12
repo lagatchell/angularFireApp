@@ -17,17 +17,13 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class MovieService {
 
-    movies: Observable<Movie[]>;
-
     constructor(
         public snackBar: SnackBarComponent,
-        private readonly afd: AngularFireDatabase
-    ){
-        this.movies = this.afd.list<Movie>('movies').valueChanges();
-    }
+        private readonly afdb: AngularFireDatabase
+    ){}
 
     getMovies$() {
-        return this.movies;
+        return this.afdb.list<Movie>('movies').valueChanges();
     }
 
     createMovie(movie: Movie) {

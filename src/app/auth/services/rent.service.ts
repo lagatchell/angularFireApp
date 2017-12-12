@@ -27,12 +27,12 @@ export class RentService {
         public snackBar: SnackBarComponent,
         public userService: UserService,
         public movieService: MovieService,
-        private readonly afd: AngularFireDatabase
+        private readonly afdb: AngularFireDatabase
     ){}
 
     getRentedMovies$() {
-        let rented: Observable<any> = this.afd.list('rented/' + this.userService.authUser.uid).valueChanges();
-        let movies: Observable<Movie[]> = this.movieService.movies;
+        let rented: Observable<any> = this.afdb.list('rented/' + this.userService.authUser.uid).valueChanges();
+        let movies: Observable<Movie[]> = this.movieService.getMovies$();
 
         return Observable.combineLatest(rented, movies).map(([rentedMovies, movieList]) => {
             let returnedMovies = [];
@@ -52,7 +52,7 @@ export class RentService {
 
     rentMovie(movie) {
         const self = this;
-        let uniqueId = this.afd.database.ref().child('rented/'+ this.userService.authUser.uid).push().key;
+        let uniqueId = this.afdb.database.ref().child('rented/'+ this.userService.authUser.uid).push().key;
 
         let rentMovieData = {
             movieId: movie.id,
@@ -71,7 +71,7 @@ export class RentService {
         newRecord['/rented/'+ this.userService.authUser.uid +'/'+ uniqueId] = rentMovieData;
         newRecord['/history/'+ this.userService.authUser.uid + '/' + uniqueId] = historyMovieData;
 
-        this.afd.database
+        this.afdb.database
             .ref()
             .update(newRecord)
             .then(function(){
@@ -81,9 +81,9 @@ export class RentService {
 
     returnMovie(rentedKey: string, movie: Movie) {
         const self = this;
-        this.afd.list('rented/'+this.userService.authUser.uid+"/"+rentedKey).remove();
+        this.afdb.list('rented/'+this.userService.authUser.uid+"/"+rentedKey).remove();
 
-        let dbRef2 = this.afd.database.ref('history/'+this.userService.authUser.uid).child(rentedKey)
+        let dbRef2 = this.afdb.database.ref('history/'+this.userService.authUser.uid).child(rentedKey)
         .update({
             returnDate: self.getCurrentDate()
         });
@@ -91,8 +91,7 @@ export class RentService {
         self.snackBar.open(movie.title + ' has been returned');
     }
 
-    getCurrentDate(): string
-    {
+    getCurrentDate(): string {
         let today = new Date();
         let dd = (today.getDate()).toString();
         let mm = (today.getMonth()+1).toString();

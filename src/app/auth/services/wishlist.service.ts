@@ -28,12 +28,12 @@ export class WishListService {
         public snackBar: SnackBarComponent,
         public userService: UserService,
         public movieService: MovieService,
-        private readonly afd: AngularFireDatabase
+        private readonly afdb: AngularFireDatabase
     ){}
 
     getWishlist$() {
-        let wishlist: Observable<WishlistMovie[]> = this.afd.list('wishlist/' + this.userService.authUser.uid).valueChanges();
-        let movies: Observable<Movie[]> = this.movieService.movies;
+        let wishlist: Observable<WishlistMovie[]> = this.afdb.list('wishlist/' + this.userService.authUser.uid).valueChanges();
+        let movies: Observable<Movie[]> = this.movieService.getMovies$();
 
         return Observable.combineLatest(wishlist, movies).map(([wishList, movieList]) => {
             let returnedMovies: WishlistMovie[] = [];
@@ -55,7 +55,7 @@ export class WishListService {
     addMovie(movie: WishlistMovie) {
         const self = this;
         
-        let dbRef = this.afd.database.ref('wishlist/'+ this.userService.authUser.uid);
+        let dbRef = this.afdb.database.ref('wishlist/'+ this.userService.authUser.uid);
         let wishlistMovie = dbRef.push();
         wishlistMovie.set ({
             movieId: movie.id,
@@ -72,7 +72,7 @@ export class WishListService {
     removeMovie(movie: WishlistMovie) {
         const self = this;
 
-        this.afd.database.ref('wishlist/'+this.userService.authUser.uid).child(movie.id).remove()
+        this.afdb.database.ref('wishlist/'+this.userService.authUser.uid).child(movie.id).remove()
             .then(function(){
                 self.snackBar.open(movie.title + ' has been removed from your wish list');
             })
