@@ -21,7 +21,7 @@ import { Movie } from '../models/movie';
 import { WishlistMovie } from '../models/wishlist-movie';
  
 // Other
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     templateUrl: './wishlist.component.html', 

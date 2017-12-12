@@ -15,7 +15,7 @@ import { RentService } from '../services/rent.service';
 import { Movie } from '../models/movie';
 
 // Other
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     templateUrl: './rent.component.html', 

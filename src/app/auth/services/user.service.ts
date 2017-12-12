@@ -53,14 +53,13 @@ export class UserService implements CanActivate {
                 this.loggedInUser = null;
                 this.authUser = null;
                 this.currentURL = "/auth/movies";
-                this.router.navigate(['/auth/login']);
+                this.router.navigate(['']);
             }
         });
     }
 
     verifyLogin(): boolean {
-        if (this.userLoggedIn) { return true; }
-        return false;
+        return this.userLoggedIn;
     }
 
     register(email: string, password: string) {
@@ -77,12 +76,9 @@ export class UserService implements CanActivate {
     login(loginEmail: string, loginPassword: string) {
         const self = this;
         this.afAuth.auth.signInWithEmailAndPassword(loginEmail, loginPassword)
-        .then(function(){
-            self.router.navigate(['/auth/movies']);
-        })
-        .catch(function(error){
-            self.snackBar.open('Unable to login. Try again!');
-        });
+            .catch(function(error){
+                self.snackBar.open('Unable to login. Try again!');
+            });
     }
 
     logout() {

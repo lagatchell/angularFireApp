@@ -16,7 +16,9 @@ import { Movie } from '../models/movie';
 import { SnackBarComponent } from '../../shared/snackbar.component';
 
 // Other
-import { Observable } from 'rxjs/';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class RentService {

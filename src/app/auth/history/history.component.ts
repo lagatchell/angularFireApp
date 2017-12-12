@@ -13,7 +13,7 @@ import { Movie } from '../models/movie';
 import { RentedMovie } from '../models/rented-movie';
 
 // Other
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     templateUrl: './history.component.html', 

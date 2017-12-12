@@ -14,7 +14,9 @@ import { RentedMovie } from '../models/rented-movie';
 import { Movie } from '../models/movie';
 
 // Other
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class HistoryService {

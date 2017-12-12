@@ -12,7 +12,7 @@ import { Movie } from '../models/movie';
 import { SnackBarComponent } from '../../shared/snackbar.component';
 
 // Other
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class MovieService {
