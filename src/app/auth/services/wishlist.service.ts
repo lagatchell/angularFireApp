@@ -52,32 +52,28 @@ export class WishListService {
         });
     }
 
-    addMovie(movie: WishlistMovie) {
-        const self = this;
-        
+    addMovie(movie: WishlistMovie) {        
         let dbRef = this.afdb.database.ref('wishlist/'+ this.userService.authUser.uid);
         let wishlistMovie = dbRef.push();
         wishlistMovie.set ({
             movieId: movie.id,
             id: wishlistMovie.key
         })
-        .then(function(){
-            self.snackBar.open(movie.title + ' has been added to your wish list');
+        .then(() => {
+            this.snackBar.open(movie.title + ' has been added to your wish list');
         })
-        .catch(function(error){
+        .catch((error) => {
             console.log(error.message);
         });
     }
 
     removeMovie(movie: WishlistMovie) {
-        const self = this;
-
         this.afdb.database.ref('wishlist/'+this.userService.authUser.uid).child(movie.id).remove()
-            .then(function(){
-                self.snackBar.open(movie.title + ' has been removed from your wish list');
-            })
-            .catch(function(error){
-                console.log(error.message);
-            });
+        .then(() => {
+            this.snackBar.open(movie.title + ' has been removed from your wish list');
+        })
+        .catch((error) => {
+            console.log(error.message);
+        });
     }
 }

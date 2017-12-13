@@ -6,6 +6,4 @@ import { Component } from '@angular/core';
   template: `<navi-bar></navi-bar>
             <router-outlet></router-outlet>`
 })
-export class AppComponent {
-  title = 'app';
-}
+export class AppComponent {}

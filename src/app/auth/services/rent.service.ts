@@ -72,23 +72,26 @@ export class RentService {
         newRecord['/history/'+ this.userService.authUser.uid + '/' + uniqueId] = historyMovieData;
 
         this.afdb.database
-            .ref()
-            .update(newRecord)
-            .then(function(){
-                self.snackBar.open(movie.title + ' has been added to your rentals');
-            });
+        .ref()
+        .update(newRecord)
+        .then(() => {
+            this.snackBar.open(movie.title + ' has been added to your rentals');
+        });
     }
 
     returnMovie(rentedKey: string, movie: Movie) {
-        const self = this;
         this.afdb.list('rented/'+this.userService.authUser.uid+"/"+rentedKey).remove();
 
-        let dbRef2 = this.afdb.database.ref('history/'+this.userService.authUser.uid).child(rentedKey)
+        this.afdb.database.ref('history/'+this.userService.authUser.uid).child(rentedKey)
         .update({
-            returnDate: self.getCurrentDate()
+            returnDate: this.getCurrentDate()
+        })
+        .then(() => {
+            this.snackBar.open(movie.title + ' has been returned');
+        })
+        .catch((error) => {
+            console.log(error.message);
         });
-
-        self.snackBar.open(movie.title + ' has been returned');
     }
 
     getCurrentDate(): string {

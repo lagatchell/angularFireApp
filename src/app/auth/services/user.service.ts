@@ -63,35 +63,32 @@ export class UserService implements CanActivate {
     }
 
     register(email: string, password: string) {
-        let self = this;
         this.afAuth.auth.createUserWithEmailAndPassword(email, password)
-            .then(function(){
-                self.router.navigate(['/auth/movies']);
-            })
-            .catch(function(error){
-                console.log(error.message);
-            });
+        .then(() => {
+            this.router.navigate(['/auth/movies']);
+        })
+        .catch((error) => {
+            console.log(error.message);
+        });
     }
 
     login(loginEmail: string, loginPassword: string) {
-        const self = this;
         this.afAuth.auth.signInWithEmailAndPassword(loginEmail, loginPassword)
-            .catch(function(error){
-                self.snackBar.open('Unable to login. Try again!');
-            });
+        .catch((error) => {
+            this.snackBar.open('Unable to login. Try again!');
+        });
     }
 
     logout() {
-        const self = this;
-        this.afAuth.auth.signOut().then(function(){
-            self.snackBar.open('Logged out');
-        }).catch(function(error) {
-            self.snackBar.open('Unable to logout. Try again!');
+        this.afAuth.auth.signOut()
+        .then(() => {
+            this.snackBar.open('Logged out');
+        }).catch((error) => {
+            this.snackBar.open('Unable to logout. Try again!');
         });
     }
 
     updateUser(user: User, newPassword) {
-        const self = this;
         let storageRef = firebase.storage().ref();
         storageRef.child(`images/users/${user.id}`).putString(user.photoURL, 'data_url');
         let path = storageRef.child(`images/users/${user.id}`).fullPath;
@@ -102,7 +99,7 @@ export class UserService implements CanActivate {
                 photoURL: url
              });
         })
-        .then(function(){
+        .then(() => {
             if(typeof(newPassword) != 'undefined' && newPassword != null && newPassword != "")
             {
                 this.afAuth.auth.currentUser.updatePassword(newPassword)
@@ -111,10 +108,10 @@ export class UserService implements CanActivate {
                 })
             }
         })
-        .then(function(){
-            self.snackBar.open('Update sucessful!');
+        .then(() => {
+            this.snackBar.open('Update sucessful!');
         })
-        .catch(function(error){
+        .catch((error) => {
             console.log(error.message);
         });
     }

@@ -27,27 +27,26 @@ export class MovieService {
     }
 
     createMovie(movie: Movie) {
-        const self = this;
         let storageRef = firebase.storage().ref();
         storageRef.child(`images/${movie.imgTitle}`).putString(movie.imgURL, 'data_url')
-            .then((snapshot) => {
-                let url = snapshot.metadata.downloadURLs[0];
-                let dbRef = firebase.database().ref('movies/');
-                let newMovie = dbRef.push();
-                newMovie.set ({
-                    title: movie.title,
-                    duration: movie.duration,
-                    rating: movie.rating,
-                    shortDescription: movie.shortDescription,
-                    imgTitle: movie.imgTitle,
-                    imgURL: url,
-                    id: newMovie.key
-                });
-
-                self.snackBar.open(movie.title + ' has been created');
-            })
-            .catch ((error)=>{
-                this.snackBar.open(error.message);
+        .then((snapshot) => {
+            let url = snapshot.metadata.downloadURLs[0];
+            let dbRef = firebase.database().ref('movies/');
+            let newMovie = dbRef.push();
+            newMovie.set ({
+                title: movie.title,
+                duration: movie.duration,
+                rating: movie.rating,
+                shortDescription: movie.shortDescription,
+                imgTitle: movie.imgTitle,
+                imgURL: url,
+                id: newMovie.key
             });
+
+            this.snackBar.open(movie.title + ' has been created');
+        })
+        .catch ((error)=>{
+            this.snackBar.open(error.message);
+        });
     }
 }
