@@ -37,3 +37,8 @@
     background-color: #e1e1e1;
     cursor: pointer;
 }
+
+.movie-poster {
+    height: 150px;
+    padding: 10px;
+}

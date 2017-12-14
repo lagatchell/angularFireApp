@@ -30,11 +30,17 @@ import { Observable } from 'rxjs/Observable';
 
 export class WishListComponent {
 
-    displayedColumnKeys = ['title'];
+    displayedColumnKeys = ['imgURL', 'title'];
     displayedColumns = [
         {
+            id: 'imgURL',
+            display: 'Poster',
+            type: 'image'
+        },
+        {
             id: 'title',
-            display: 'Title'
+            display: 'Title',
+            type: 'string'
         }
     ];
     dataSource: MatTableDataSource<any>;

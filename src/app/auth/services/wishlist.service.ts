@@ -42,6 +42,7 @@ export class WishListService {
                     if (wl.movieId === m.id) {
                         returnedMovies.push({
                             title: m.title,
+                            imgURL: m.imgURL,
                             movieId: m.id,
                             id: wl.id
                         });
