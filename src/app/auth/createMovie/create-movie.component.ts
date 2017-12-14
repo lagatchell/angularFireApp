@@ -6,6 +6,7 @@ import { MovieService } from '../services/movie.service';
 
 // Models
 import { Movie } from '../models/movie';
+import { FormGroup } from '@angular/forms/src/model';
 
 @Component({
     templateUrl: './create-movie.component.html', 
@@ -20,8 +21,8 @@ export class CreateMovieComponent {
     movieRating: number = 1;
     movieImgTitle: string;
     movieImg: any;
+    moviePosterInput: HTMLInputElement;
     invalidUpload: boolean;
-    isReset: boolean = false;
 
     constructor(
         public movieService: MovieService
@@ -61,14 +62,9 @@ export class CreateMovieComponent {
 
         try {
             this.movieService.createMovie(newMovie);
-
-            this.movieTitle = null;
-            this.movieDescription = null;
-            this.movieDuration = null;
-            this.movieRating = null;
-            this.movieTitle = null;
+            this.movieTitle = "";
             this.movieImg = null;
-            this.isReset = true;
+            this.moviePosterInput.value = "";
         } catch(e)
         {
             console.log(e.message);
